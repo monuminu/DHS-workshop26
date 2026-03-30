@@ -1,4 +1,4 @@
-# Build Agents with Azure AI
+# Building Intelligent Agents — Tools, Workflows & Orchestration
 
 ### One-Day Workshop Agenda
 
