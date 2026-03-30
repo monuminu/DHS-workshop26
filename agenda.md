@@ -1,4 +1,4 @@
-# Building Intelligent Agents — Tools, Workflows & Orchestration
+# Building Intelligent Agents — Tools, Orchestration & Governance
 
 ### One-Day Workshop Agenda
 
