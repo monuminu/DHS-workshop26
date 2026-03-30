@@ -13,17 +13,17 @@
 
 | Time | Session | Format |
 |:---|:---|:---:|
-| 9:00 - 9:45 | Welcome & Introduction to AI Agents on Azure | Lecture |
-| 9:45 - 10:45 | Lab 1 - Build Your First Agent | Hands-on |
-| 10:45 - 11:00 | Break | - |
-| 11:00 - 12:00 | Lab 2 - Supercharging Agents with Tools | Lecture + Hands-on |
-| 12:00 - 12:45 | Lunch | - |
-| 12:45 - 1:30 | Deep Dive - RAG Agents with Azure AI Search | Lecture |
-| 1:30 - 2:30 | Lab 3 - Build a RAG-Powered Agent | Hands-on |
-| 2:30 - 2:45 | Break | - |
-| 2:45 - 3:30 | Multi-Agent Systems & Orchestration | Lecture |
-| 3:30 - 4:30 | Lab 4 - Build a Multi-Agent Solution | Hands-on |
-| 4:30 - 5:00 | Production Best Practices & Wrap-up | Lecture + Q&A |
+| 9:00 - 9:30 | Welcome & Introduction to AI Agents | Lecture |
+| 9:30 - 10:30 | Lab 1 - Build Your First Agent with Azuere AI Foundry| Hands-on |
+| 10:30 - 10:45 | Break | - |
+| 10:45 - 11:45 | Lab 2 - Tools, MCP Servers & Foundry IQ | Lecture + Hands-on |
+| 11:45 - 12:30 | Lunch | - |
+| 12:30 - 1:15 | Microsoft Agent Framework Deep Dive | Lecture |
+| 1:15 - 2:15 | Lab 3 - Build Agents with Microsoft Agent Framework | Hands-on |
+| 2:15 - 2:30 | Break | - |
+| 2:30 - 3:15 | Multi-Agent Orchestration — Workflows, A2A & Connected Agents | Lecture |
+| 3:15 - 4:15 | Lab 4 - Multi-Agent Workflows & A2A Integration | Hands-on |
+| 4:15 - 5:00 | Production Best Practices & Wrap-up | Lecture + Q&A |
 
 ---
 
@@ -37,6 +37,7 @@ Participants should complete the following before the workshop:
 - [ ] **Azure CLI** installed and signed in (`az login`) - [Install](https://learn.microsoft.com/cli/azure/install-azure-cli)
 - [ ] **Azure Developer CLI (azd)** installed - [Install](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - [ ] **Docker Desktop** installed (for hosted agent lab) - [Download](https://www.docker.com/products/docker-desktop/)
+- [ ] **Node.js 18+** installed (for MCP server lab) - [Download](https://nodejs.org/)
 
 ---
 
@@ -44,9 +45,9 @@ Participants should complete the following before the workshop:
 
 ---
 
-### 9:00 - 9:45 | Welcome & Introduction to AI Agents on Azure
+### 9:00 - 9:30 | Welcome & Introduction to AI Agents on Azure
 
-**Format:** Lecture (45 min)
+**Format:** Lecture (30 min)
 
 #### Topics
 
@@ -55,24 +56,28 @@ Participants should complete the following before the workshop:
   - Key characteristics: reasoning, tool use, memory, planning
   - Agent design patterns: ReAct, tool-augmented generation, multi-agent
 
-- **Azure AI Foundry Overview**
-  - Foundry portal, projects, and resource model
+- **The Azure AI Agent Platform**
+  - Azure AI Foundry — portal, projects, and resource model
   - Model catalog — GPT-4o, Llama, DeepSeek, Cohere, and more
-  - Foundry Agent Service architecture
+  - Two pillars for building agents:
 
-- **Microsoft Foundry Agent Service**
-  - Prompt agents vs. hosted agents
-  - Agent runtime, threads, and conversations
-  - Built-in tool ecosystem at a glance
-  - SDKs: Python (`azure-ai-projects`), C#, TypeScript, Java, REST API
+    | Pillar | What It Is | Best For |
+    |:---|:---|:---|
+    | **Foundry Agent Service** | Managed runtime for prompt & hosted agents | Rapid agent development, no-code/low-code, enterprise hosting |
+    | **Microsoft Agent Framework** | Open-source SDK (successor to Semantic Kernel + AutoGen) | Code-first control, graph-based workflows, multi-framework agents |
+
+- **Key Protocols & Standards**
+  - **MCP (Model Context Protocol)** — open standard for tool integration
+  - **A2A (Agent-to-Agent)** — standardized inter-agent communication
+  - How MCP and A2A fit into the Azure AI ecosystem
 
 #### Key Takeaways
 
-> Participants understand the Azure AI Foundry landscape and the Foundry Agent Service architecture. They know the difference between prompt agents and hosted agents, and can identify which tools are available.
+> Participants understand the two-pillar architecture (Foundry Agent Service + Agent Framework), the role of MCP and A2A protocols, and can identify which approach fits their scenario.
 
 ---
 
-### 9:45 - 10:45 | Lab 1 - Build Your First Agent
+### 9:30 - 10:30 | Lab 1 - Build Your First Agent with Foundry Agent Service
 
 **Format:** Hands-on Lab (60 min)
 
@@ -83,43 +88,13 @@ Participants should complete the following before the workshop:
 - Build and run a prompt agent using the Python SDK
 - Interact with the agent through threads and conversations
 
-#### Lab Steps
+---
 
-1. **Environment Setup** (15 min)
-   - Install the Python SDK:
-     ```bash
-     pip install azure-ai-projects azure-identity
-     ```
-   - Configure environment variables (`PROJECT_ENDPOINT`, `MODEL_DEPLOYMENT_NAME`)
-   - Authenticate with `az login`
-
-2. **Create Your First Agent** (20 min)
-   - Initialize the `AIProjectClient`
-   - Create an agent with custom instructions
-   - Create a thread, send messages, and process responses
-   - Explore streaming vs. non-streaming responses
-
-3. **Portal Exploration** (10 min)
-   - Create an agent in the [Foundry portal](https://ai.azure.com) (no-code)
-   - Compare the portal experience vs. SDK approach
-
-4. **Experiment & Extend** (15 min)
-   - Modify instructions and observe behavior changes
-   - Try different models from the catalog
-   - Explore conversation history and thread management
-
-#### Resources
-
-- [Microsoft Foundry Quickstart](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code)
-- [Python SDK Reference](https://aka.ms/azsdk/azure-ai-projects/python/reference)
+### 10:30 - 10:45 | Break (15 min)
 
 ---
 
-### 10:45 - 11:00 | Break (15 min)
-
----
-
-### 11:00 - 12:00 | Lab 2 - Supercharging Agents with Tools
+### 10:45 - 11:45 | Lab 2 - Tools, MCP Servers & Foundry IQ
 
 **Format:** Lecture (20 min) + Hands-on Lab (40 min)
 
@@ -134,121 +109,141 @@ Participants should complete the following before the workshop:
   | Bing Grounding | Access real-time web information via Bing Search |
   | Azure Functions | Call serverless functions as agent tools |
   | OpenAPI | Connect to any REST API via OpenAPI spec |
-  | MCP Servers | Integrate Model Context Protocol tools |
+  | MCP Servers | Connect to any Model Context Protocol tool server |
+  | Memory | Persistent long-term memory across sessions (preview) |
+
+- **Model Context Protocol (MCP) — Deep Dive**
+  - What is MCP? Open standard for tool integration with LLMs
+  - MCP in Foundry Agent Service: connect remote MCP servers as tools
+  - MCP tool catalog: Azure DevOps, GitHub, and custom servers
+  - Authentication, approval workflows, and security best practices
+  - Exposing your own services as MCP servers via Azure Functions
+
+- **Foundry IQ — Enterprise Knowledge Layer**
+  - What is Foundry IQ? Managed knowledge layer for enterprise data
+  - Knowledge bases and knowledge sources (Azure, SharePoint, OneLake, Web)
+  - Agentic retrieval engine — multi-query, iterative search with reasoning
+  - Connecting Foundry IQ knowledge bases to agents
+  - Foundry IQ vs. File Search vs. Azure AI Search — when to use which
+
+    | Approach | Best For |
+    |:---|:---|
+    | **Foundry IQ** | Multi-source enterprise knowledge with agentic retrieval |
+    | **File Search** | User-uploaded documents during an interaction |
+    | **Azure AI Search** | Custom vector/hybrid search with full index control |
+    | **Memory** | User-specific context that persists over time |
 
 - **Function Calling** — Define custom functions the agent can invoke
 - **Tool selection best practices** — When to use which tool
 
 #### Lab Steps
 
-1. **Code Interpreter** (15 min)
-   - Attach the Code Interpreter tool to your agent
-   - Ask the agent to perform data analysis and generate visualizations
-   - Upload a CSV file and have the agent process it
+1. **Code Interpreter & File Search** (10 min)
+   - Attach Code Interpreter to your agent for data analysis
+   - Upload documents and query them with File Search
 
-2. **File Search** (10 min)
-   - Upload documents to a vector store
-   - Create an agent with File Search enabled
-   - Query the agent about the uploaded documents
+2. **Connect an MCP Server** (15 min)
+   - Connect the GitHub MCP server to your agent
+   - Configure `server_label`, `server_url`, and authentication headers
+   - Ask the agent to query GitHub repositories
+   - Review MCP tool call approval and auditing
 
-3. **Bing Grounding** (10 min)
-   - Set up a Bing Grounding connection
-   - Create an agent that can search the web for real-time information
-   - Handle citations and source attribution
+3. **Foundry IQ Knowledge Base** (10 min)
+   - Create a Foundry IQ knowledge base in the portal
+   - Connect knowledge sources (sample documents)
+   - Attach the knowledge base to your agent
+   - Test agentic retrieval with citation-backed answers
 
-4. **Custom Function Calling** (5 min)
-   - Define a custom function (e.g., get weather, lookup database)
-   - Attach it to the agent and test the function calling flow
-
-#### Resources
-
-- [Tool Best Practices](https://learn.microsoft.com/azure/foundry/agents/concepts/tool-best-practice)
-- [Code Interpreter Guide](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/code-interpreter)
-- [Bing Grounding Guide](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/bing-tools)
+4. **Bing Grounding + Custom Functions** (5 min)
+   - Create an agent with Bing Grounding for real-time web search
+   - Define and attach a custom function
 
 ---
 
-### 12:00 - 12:45 | Lunch (45 min)
+### 11:45 - 12:30 | Lunch (45 min)
 
 ---
 
-### 12:45 - 1:30 | Deep Dive - RAG Agents with Azure AI Search
+### 12:30 - 1:15 | Microsoft Agent Framework Deep Dive
 
 **Format:** Lecture (45 min)
 
 #### Topics
 
-- **Why RAG for Agents?**
-  - Limitations of parametric knowledge
-  - Retrieval-Augmented Generation explained
-  - RAG vs. fine-tuning vs. prompt engineering
+- **What is Microsoft Agent Framework?**
+  - Open-source SDK — successor to Semantic Kernel + AutoGen
+  - Two core capabilities: **Agents** and **Workflows**
+  - Supported model providers: Azure OpenAI, OpenAI, Anthropic, Ollama, and more
+  - Python and C# support
 
-- **Azure AI Search as a Knowledge Source**
-  - Index creation and document ingestion
-  - Vector search, hybrid search, and semantic ranking
-  - Embeddings with Azure OpenAI
+- **Agent Framework Architecture**
 
-- **Integrating Azure AI Search with Agent Service**
-  - The Azure AI Search tool for agents
-  - Index connection configuration
-  - Query strategies: keyword, vector, hybrid
-  - Chunking strategies and relevance tuning
+  | Component | Description |
+  |:---|:---|
+  | **Agents** | Individual agents with LLM, tools, MCP servers, and middleware |
+  | **Workflows** | Graph-based orchestration with type-safe routing and checkpointing |
+  | **Model Clients** | Chat completions and Responses API clients |
+  | **Session** | State management for conversations and context |
+  | **Context Providers** | Agent memory and contextual data injection |
+  | **Middleware** | Intercept and transform agent actions (human-in-the-loop, logging) |
 
-- **Architecture Patterns**
-  - Simple RAG agent
-  - Agentic RAG with iterative retrieval
-  - Multi-source RAG (combining search + file search + web)
+- **Tools & MCP in Agent Framework**
+  - Native tool functions
+  - MCP integration types:
+    - `MCPStdioTool` — local MCP servers via stdin/stdout
+    - `MCPStreamableHTTPTool` — remote HTTP/SSE MCP servers
+    - `MCPWebsocketTool` — WebSocket MCP servers
+  - Exposing agents _as_ MCP servers with `.as_mcp_server()`
+
+- **A2A Protocol in Agent Framework**
+  - `A2AAgent` — wrap any remote A2A-compliant endpoint
+  - Streaming responses via Server-Sent Events
+  - Long-running tasks with `background=True` and continuation tokens
+  - Authentication with `AuthInterceptor`
+
+- **Hosting Options**
+
+  | Option | Best For |
+  |:---|:---|
+  | A2A Protocol | Multi-agent systems, cross-framework interop |
+  | OpenAI-Compatible Endpoints | Chat Completions / Responses API clients |
+  | Azure Functions (Durable) | Serverless, long-running tasks |
+  | AG-UI Protocol | Web-based AI agent frontends |
+
+- **Agent Framework vs. Foundry Agent Service — Choosing the Right Approach**
+
+  | Criteria | Foundry Agent Service | Agent Framework |
+  |:---|:---|:---|
+  | Orchestration | Managed, declarative | Code-first, graph-based |
+  | Control | System prompt-driven | Full programmatic control |
+  | Compute | Managed by Foundry | You manage (Container Apps, Functions, etc.) |
+  | Workflows | Visual builder + YAML | Python/C# code with type safety |
+  | Best for | Rapid prototyping, enterprise hosting | Custom logic, multi-framework agents |
 
 #### Key Takeaways
 
-> Participants understand how to ground agents in enterprise data using Azure AI Search, and can design effective RAG architectures for their use cases.
+> Participants understand the Agent Framework architecture, how MCP and A2A protocols are used in code-first agents, and can choose between Foundry Agent Service and Agent Framework for their use case.
 
 ---
 
-### 1:30 - 2:30 | Lab 3 - Build a RAG-Powered Agent
+### 1:15 - 2:15 | Lab 3 - Build Agents with Microsoft Agent Framework
 
 **Format:** Hands-on Lab (60 min)
 
 #### Objectives
 
-- Create an Azure AI Search index with sample documents
-- Build an agent that retrieves and reasons over enterprise knowledge
-- Implement citation handling and source attribution
-
-#### Lab Steps
-
-1. **Set Up Azure AI Search** (15 min)
-   - Create an Azure AI Search resource (or use pre-provisioned)
-   - Upload sample documents (e.g., product manuals, HR policies)
-   - Create a vector index with embeddings
-
-2. **Connect Search to Your Agent** (15 min)
-   - Configure the Azure AI Search tool connection
-   - Create an agent with search grounding
-   - Set instructions for search behavior and citation format
-
-3. **Test and Iterate** (20 min)
-   - Ask questions that require document retrieval
-   - Observe how the agent combines search results with reasoning
-   - Compare keyword vs. vector vs. hybrid search quality
-
-4. **Advanced Patterns** (10 min)
-   - Combine Azure AI Search with File Search for multi-source RAG
-   - Add Bing Grounding for real-time information alongside enterprise data
-   - Test agentic retrieval with follow-up questions
-
-#### Resources
-
-- [Azure AI Search Tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/azure-ai-search)
-- [Azure AI Search Documentation](https://learn.microsoft.com/azure/search/)
+- Build an agent using the Microsoft Agent Framework SDK
+- Integrate MCP tools (local and remote)
+- Connect to a remote A2A agent
+- Compare the Agent Framework experience with Foundry Agent Service
 
 ---
 
-### 2:30 - 2:45 | Break (15 min)
+### 2:15 - 2:30 | Break (15 min)
 
 ---
 
-### 2:45 - 3:30 | Multi-Agent Systems & Orchestration
+### 2:30 - 3:15 | Multi-Agent Orchestration — Workflows, A2A & Connected Agents
 
 **Format:** Lecture (45 min)
 
@@ -259,21 +254,51 @@ Participants should complete the following before the workshop:
   - Specialization, delegation, and collaboration patterns
   - When to use multi-agent vs. a single agent with many tools
 
+- **Foundry Workflows — Visual Multi-Agent Orchestration**
+  - What are workflows? Declarative, UI-based agent orchestration
+  - Workflow patterns:
+
+    | Pattern | Description | Use Case |
+    |:---|:---|:---|
+    | **Sequential** | Passes results from one agent to the next in order | Step-by-step pipelines, multi-stage processing |
+    | **Group Chat** | Dynamically passes control between agents | Escalation, expert handoff, dynamic collaboration |
+    | **Human in the Loop** | Asks the user a question and awaits input | Approval requests, clarifying questions |
+
+  - Creating workflows in the Foundry portal
+  - Workflow YAML editing in VS Code
+  - Workflow versioning, change logs, and visual monitoring
+
+- **Agent Framework Workflows — Code-First Orchestration**
+  - Graph-based workflow architecture
+  - Key features: type safety, conditional routing, parallel processing, checkpointing
+  - Orchestration patterns: sequential, concurrent, hand-off, magentic
+  - Human-in-the-loop with request/response patterns
+  - Comparing Foundry Workflows vs. Agent Framework Workflows
+
+    | Aspect | Foundry Workflows | Agent Framework Workflows |
+    |:---|:---|:---|
+    | Interface | Visual builder + YAML | Python / C# code |
+    | Routing | Template-based patterns | Graph-based with custom logic |
+    | Checkpointing | Managed | Developer-controlled |
+    | Best for | No-code/low-code teams | Full control, complex branching |
+
 - **Connected Agents in Foundry**
   - Architecture: main agent + connected agents
-  - How connected agents communicate
-  - Response aggregation and handoff patterns
+  - How connected agents communicate and aggregate responses
   - The `ConnectedAgentTool` API
 
-- **Agent-to-Agent Protocol (A2A)**
-  - What is A2A and why it matters
-  - Connecting Foundry agents with external agent endpoints
-  - A2A vs. Connected Agents — when to use which
+- **A2A Protocol for Cross-System Agent Communication**
+  - A2A protocol specification: agent cards, message-based communication, tasks
+  - A2A in Foundry Agent Service — connecting external agent endpoints
+  - A2A in Agent Framework — `A2AAgent` for cross-framework interop
+  - A2A vs. Connected Agents — choosing the right approach
 
-- **Workflows in Foundry**
-  - Visual workflow builder
-  - Orchestrating agents and business logic
-  - Conditional routing and parallel execution
+    | Criteria | Connected Agents | A2A Protocol |
+    |:---|:---|:---|
+    | Scope | Within Foundry project | Cross-platform, cross-framework |
+    | Protocol | Foundry-native | Open standard (a2a-protocol.org) |
+    | Discovery | By agent ID | Via agent cards |
+    | Best for | Internal agent teams | External / multi-vendor integration |
 
 - **Hosted Agents**
   - Containerized agents with Agent Framework or LangGraph
@@ -282,82 +307,115 @@ Participants should complete the following before the workshop:
 
 #### Key Takeaways
 
-> Participants can design multi-agent architectures using Connected Agents, understand the A2A protocol, and know when to use hosted agents for complex scenarios.
+> Participants can design multi-agent architectures using Foundry Workflows, Agent Framework Workflows, Connected Agents, and A2A. They understand when to use each orchestration approach and how the protocols enable interoperability.
 
 ---
 
-### 3:30 - 4:30 | Lab 4 - Build a Multi-Agent Solution
+### 3:15 - 4:15 | Lab 4 - Multi-Agent Workflows & A2A Integration
 
 **Format:** Hands-on Lab (60 min)
 
 #### Objectives
 
-- Design and implement a multi-agent system with specialized agents
-- Use Connected Agents to orchestrate collaboration
-- Test the end-to-end multi-agent workflow
+- Build a Foundry Workflow with multiple agents (visual orchestration)
+- Build a code-first workflow with Microsoft Agent Framework
+- Connect agents across systems using the A2A protocol
 
 #### Lab Steps
 
-1. **Design the Agent Team** (10 min)
-   - Scenario: Build a "Research Assistant" with specialized sub-agents
-   - Define roles:
-     - **Research Agent** — searches the web using Bing Grounding
-     - **Analysis Agent** — processes data with Code Interpreter
-     - **Writer Agent** — synthesizes findings into a report
+1. **Foundry Workflow — Sequential Pipeline** (15 min)
+   - Open the Foundry portal and create a new **Sequential** workflow
+   - Add two agent nodes:
+     - **Research Agent** — uses Bing Grounding to gather information
+     - **Writer Agent** — synthesizes findings into a summary
+   - Connect the nodes, save, and run the workflow
+   - Verify each node completes and review the output
 
-2. **Build Specialized Agents** (15 min)
-   - Create each agent with focused instructions and tools
-   - Test each agent individually to verify capability
+2. **Foundry Workflow — Human in the Loop** (10 min)
+   - Add a **Human in the Loop** node between the agents
+   - Configure an approval step: "Review research findings before writing"
+   - Run the workflow and approve/reject at the human step
+   - Observe how the workflow pauses and resumes
 
-3. **Connect Agents Together** (20 min)
-   - Create the main orchestrator agent
-   - Attach sub-agents using `ConnectedAgentTool`
-   - Configure how the main agent delegates tasks
+3. **Agent Framework Workflow — Code-First** (20 min)
+   - Build a graph-based workflow with Agent Framework:
+     - Define a `StateGraph` with typed state
+     - Create executor nodes for specialized agents
+     - Add conditional edges for routing
+     - Enable checkpointing for recovery
+   - Run the workflow and observe agent collaboration
+   - Compare the code-first experience vs. the Foundry visual builder
 
-4. **Test the Multi-Agent System** (15 min)
-   - Send complex queries that require multiple agents to collaborate
-   - Observe the orchestration flow and agent interactions
-   - Review run steps to understand delegation decisions
-   - Iterate on instructions to improve collaboration quality
-
-#### Resources
-
-- [Connected Agents Guide](https://learn.microsoft.com/azure/foundry/agents/how-to/connected-agents)
-- [Multi-Agent Training Module](https://learn.microsoft.com/training/modules/develop-multi-agent-azure-ai-foundry/)
-- [A2A Protocol Documentation](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/agent-to-agent)
+4. **A2A Cross-System Integration** (15 min)
+   - Expose an Agent Framework agent as an A2A endpoint
+   - Connect the A2A endpoint to a Foundry agent using the A2A tool
+   - Send a query that requires both agents to collaborate
+   - Observe the cross-system communication flow
+   - Review agent cards and message exchange
 
 ---
 
-### 4:30 - 5:00 | Production Best Practices & Wrap-up
+### 4:15 - 5:00 | Production Best Practices & Wrap-up
 
-**Format:** Lecture + Q&A (30 min)
+**Format:** Lecture + Q&A (45 min)
 
 #### Topics
 
 - **Observability & Monitoring**
   - End-to-end tracing with Application Insights
   - Monitoring agent decisions, tool calls, and token usage
+  - Agent Framework telemetry and middleware-based logging
   - Setting up alerts for failures and performance degradation
 
 - **Security & Identity**
   - Microsoft Entra authentication and RBAC
   - Content filters and safety guardrails
+  - MCP security best practices: allow-lists, approval workflows, auditing
+  - A2A authentication with `AuthInterceptor`
   - Virtual network isolation and data protection
   - Managed credentials and On-Behalf-Of (OBO) authentication
 
 - **Deployment & Scaling**
   - Agent versioning and stable endpoints
-  - Hosted agents for custom runtime requirements
+  - Hosted agents: Docker + `azd` deployment to Foundry
+  - Agent Framework hosting: Azure Functions (Durable), Container Apps
   - Publishing to Microsoft Teams and Microsoft 365 Copilot
+  - Entra Agent Registry for enterprise discovery
+
+- **Foundry IQ in Production**
+  - Connecting multiple knowledge sources at scale
+  - Permission-aware retrieval and data governance
+  - Foundry IQ vs. Fabric IQ vs. Work IQ — choosing the right IQ layer
+
+    | IQ Layer | Data Domain | Use Case |
+    |:---|:---|:---|
+    | **Foundry IQ** | Enterprise data (Azure, SharePoint, OneLake, Web) | Agent knowledge grounding |
+    | **Fabric IQ** | Business analytics (OneLake, Power BI) | Data reasoning and analytics |
+    | **Work IQ** | Collaboration signals (M365 docs, meetings, chats) | Organizational context |
 
 - **Cost Management**
   - Understanding token consumption and tool call costs
+  - MCP tool call billing and Bing transaction costs
   - Optimizing agent instructions for efficiency
   - Monitoring usage with Azure Cost Management
 
+- **Choosing Your Architecture**
+
+  | Scenario | Recommended Approach |
+  |:---|:---|
+  | Quick prototyping | Foundry Agent Service (prompt agent) |
+  | Enterprise RAG | Foundry Agent Service + Foundry IQ |
+  | Custom orchestration logic | Agent Framework + Workflows |
+  | External tool integration | MCP Servers (Foundry or Agent Framework) |
+  | Cross-platform agent interop | A2A Protocol |
+  | Multi-agent collaboration | Foundry Workflows or Agent Framework Workflows |
+  | Specialized compute needs | Hosted Agents (Docker + azd) |
+
 - **What's Next?**
   - Explore the [Foundry Model Catalog](https://ai.azure.com/explore/models)
-  - Try [Agent Framework](https://learn.microsoft.com/agent-framework/) for advanced scenarios
+  - Build production workflows with [Agent Framework](https://learn.microsoft.com/agent-framework/)
+  - Dive into [Foundry IQ](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq)
+  - Build and register your own [MCP servers](https://learn.microsoft.com/azure/foundry/mcp/build-your-own-mcp-server)
   - Join the [Azure AI community](https://learn.microsoft.com/azure/ai-services/)
 
 #### Q&A Session
@@ -365,20 +423,3 @@ Participants should complete the following before the workshop:
 > Open floor for questions, architecture discussions, and next steps for your own agent projects.
 
 ---
-
-## Additional Resources
-
-| Resource | Link |
-|:---|:---|
-| Microsoft Foundry Portal | https://ai.azure.com |
-| Agent Service Overview | https://learn.microsoft.com/azure/foundry/agents/overview |
-| Foundry Quickstart | https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code |
-| Tool Best Practices | https://learn.microsoft.com/azure/foundry/agents/concepts/tool-best-practice |
-| Python SDK Samples | https://aka.ms/azsdk/azure-ai-projects/python/samples/ |
-| Multi-Agent Training | https://learn.microsoft.com/training/modules/develop-multi-agent-azure-ai-foundry/ |
-| Agent Framework Docs | https://learn.microsoft.com/agent-framework/ |
-| Hosted Agent Quickstart | https://learn.microsoft.com/azure/foundry/agents/quickstarts/quickstart-hosted-agent |
-
----
-
-*Workshop created for developers building AI agents with Microsoft Foundry Agent Service.*
