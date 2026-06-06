@@ -1,0 +1,49 @@
+[project]
+name = "dhs-workshop26"
+version = "0.1.0"
+description = "Agentic AI — a one-day, hands-on workshop on building, optimizing, and operationalizing agents with the Microsoft Agent Framework (Python)."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = { text = "MIT" }
+
+# Pin to specific Agent Framework 1.8.0 subpackages.
+#
+# IMPORTANT: do NOT depend on the `agent-framework` meta-package — it pulls in
+# `agent-framework-core[all]`, which requires pre-release-only deps
+# (e.g. agent-framework-azure-ai-search) and makes resolution fail without
+# `--prerelease=allow`. We install exactly the providers the labs use instead.
+dependencies = [
+    "agent-framework-core==1.8.0",
+    "agent-framework-foundry==1.8.0",   # default provider (Azure AI Foundry)
+    "agent-framework-openai==1.8.0",    # OpenAI + Azure OpenAI + Gemini (OpenAI-compatible)
+    "azure-identity>=1.19",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Extra model providers — install only if you plan to use them.
+#   uv pip install -e ".[anthropic]"   (etc.)
+anthropic = ["agent-framework-anthropic==1.8.0"]
+ollama = ["agent-framework-ollama==1.8.0"]
+bedrock = ["agent-framework-bedrock==1.8.0"]
+
+# Tools to author/run the notebooks and build the site locally.
+docs = [
+    "jupyter>=1.0",
+    "nbconvert>=7.16",
+    "ipykernel>=6.29",
+    "mkdocs-material>=9.5",
+    "mkdocs-jupyter>=0.25",
+    "pymdown-extensions>=10.7",
+]
+
+[tool.uv]
+# Keep us on stable releases; provider extras above are all stable 1.8.0.
+prerelease = "disallow"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["workshop_utils"]
