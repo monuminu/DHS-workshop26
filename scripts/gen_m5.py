@@ -71,10 +71,11 @@ reviewer = Agent(
 )
 
 # An agent IS an executor, so it can be a node in the graph.
+# `output_from="all"` is a WorkflowBuilder constructor argument; build() takes no args.
 workflow = (
-    WorkflowBuilder(start_executor=writer)
+    WorkflowBuilder(start_executor=writer, output_from="all")  # collect output from every node
     .add_edge(writer, reviewer)
-    .build(output_from="all")      # collect output from every node
+    .build()
 )
 
 events = await workflow.run("Write a tagline for a budget-friendly eBike.")
@@ -111,11 +112,11 @@ risk = Agent(client=client, name="risk_analyst",
              instructions="Name one key RISK to watch. One sentence.")
 
 panel = (
-    WorkflowBuilder(start_executor=intake)
+    WorkflowBuilder(start_executor=intake, output_from="all")
     .add_edge(intake, optimist)
     .add_edge(intake, skeptic)
     .add_edge(intake, risk)
-    .build(output_from="all")
+    .build()
 )
 
 events = await panel.run("Idea: a subscription service for refillable cleaning products.")
@@ -156,7 +157,7 @@ async def reverse_text(text: str, ctx: WorkflowContext[Never, str]) -> None:
     await ctx.yield_output(text[::-1])                # terminal node yields output
 
 upper = UpperCase(id="upper")
-graph = WorkflowBuilder(start_executor=upper).add_edge(upper, reverse_text).build(output_from="all")
+graph = WorkflowBuilder(start_executor=upper, output_from="all").add_edge(upper, reverse_text).build()
 
 events = await graph.run("hello world")
 print("output:", events.get_outputs())

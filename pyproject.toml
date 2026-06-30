@@ -35,11 +35,19 @@ docs = [
     "mkdocs-material>=9.5",
     "mkdocs-jupyter>=0.25",
     "pymdown-extensions>=10.7",
+    # M7 (Operationalizing) uses OpenTelemetry tracing. agent-framework-core only
+    # declares opentelemetry-api; the SDK + an OTLP exporter must be added explicitly
+    # so `configure_otel_providers(...)` works after the documented install.
+    "opentelemetry-sdk>=1.39,<2",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.39,<2",
 ]
 
 [tool.uv]
-# Keep us on stable releases; provider extras above are all stable 1.8.0.
-prerelease = "disallow"
+# Keep us on stable releases for the agent-framework providers (all stable 1.8.0).
+# `if-necessary-or-explicit` still prefers stable, but allows a pre-release when a
+# dependency has no stable option — required by opentelemetry-sdk, whose pinned
+# opentelemetry-semantic-conventions is published only as a beta (0.64b0).
+prerelease = "if-necessary-or-explicit"
 
 [build-system]
 requires = ["hatchling"]

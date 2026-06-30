@@ -42,7 +42,14 @@ pass/fail (or a score). Parameter names tell the framework what to pass in
 You can mix:
 
 - **built-in** checks like `keyword_check("weather")` (answer must mention a word), and
-- **custom** checks via the `@evaluator` decorator."""
+- **custom** checks via the `@evaluator` decorator.
+
+!!! tip "Make checks *instruction-sensitive*"
+    A good check should be one the agent can only pass if it follows its
+    instructions. `keyword_check("weather")` is weak here — the *question* already
+    says "weather", so almost any answer repeats it. Below we also require a fixed
+    **sign-off phrase** that only a well-instructed agent will produce. That's what
+    lets section 4 actually *show* improvement."""
     ),
     code(
         '''\
@@ -55,9 +62,11 @@ def is_helpful(response: str) -> bool:
     return len(response) > 10 and not any(r in response.lower() for r in refusals)
 
 # Combine built-in + custom checks into one local evaluator (no API key needed).
+# The sign-off check is instruction-sensitive: only an agent told to add the
+# phrase will pass it (see section 4).
 local = LocalEvaluator(
-    keyword_check("weather"),   # the answer must mention "weather"
-    is_helpful,                 # our custom substance check
+    keyword_check("Stay weather-aware!"),   # must end with the mandated sign-off
+    is_helpful,                             # our custom substance check
 )
 print("evaluator ready")'''
     ),
@@ -74,7 +83,10 @@ on in CI."""
 agent = Agent(
     client=get_chat_client(),
     name="weather-assistant",
-    instructions="You are a helpful weather assistant. Always mention the weather in your answer.",
+    instructions=(
+        "You are a helpful weather assistant. Always mention the weather in your "
+        "answer, and ALWAYS end your reply with the exact phrase: Stay weather-aware!"
+    ),
 )
 
 from agent_framework import evaluate_agent
@@ -99,7 +111,7 @@ for r in results:
     md(
         """\
 !!! note "From scores to action"
-    A failing check is a **lead**, not a verdict. If `keyword_check("weather")`
+    A failing check is a **lead**, not a verdict. If `keyword_check("Stay weather-aware!")`
     fails, maybe the instruction wasn't explicit enough — tighten it and re-run.
     That tighten-and-re-run cycle is the optimization loop."""
     ),
@@ -128,7 +140,11 @@ print(f"BEFORE (vague):   {before.passed}/{before.total} passed")
 improved = Agent(
     client=get_chat_client(),
     name="improved-assistant",
-    instructions="You are a weather assistant. Always explicitly mention the weather and be helpful and specific.",
+    instructions=(
+        "You are a weather assistant. Always explicitly mention the weather, be "
+        "helpful and specific, and ALWAYS end your reply with the exact phrase: "
+        "Stay weather-aware!"
+    ),
 )
 
 after = (await evaluate_agent(agent=improved, queries=[

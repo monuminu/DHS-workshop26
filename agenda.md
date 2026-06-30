@@ -14,7 +14,7 @@
 | Time | Session | Format |
 |:---|:---|:---:|
 | 9:00 - 9:30 | Welcome & Introduction to AI Agents | Lecture |
-| 9:30 - 10:30 | Lab 1 - Build Your First Agent with Azuere AI Foundry| Hands-on |
+| 9:30 - 10:30 | Lab 1 - Build Your First Agent with Azure AI Foundry| Hands-on |
 | 10:30 - 10:45 | Break | - |
 | 10:45 - 11:45 | Lab 2 - Tools, MCP Servers & Foundry IQ | Lecture + Hands-on |
 | 11:45 - 12:30 | Lunch | - |

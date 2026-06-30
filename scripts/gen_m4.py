@@ -159,11 +159,13 @@ REPL: type a topic, watch it search the web (`🌐`), plan with todos, and strea
 cited report — saving the report to **durable file memory** so it survives
 compaction.
 
-Run it locally from the repo root (needs a web-search-capable provider):
+Run it locally from the repo root (needs a web-search-capable provider). The
+sample isn't part of this repo — grab it from the Agent Framework repository:
 
 ```bash
-python -m agent_framework  # see the upstream sample for the full loop, or:
-# copy harness_research.py from microsoft/agent-framework and run it
+# Download the sample from microsoft/agent-framework, then run it directly:
+#   python/samples/02-agents/harness/harness_research.py
+python harness_research.py
 ```
 
 We don't run the interactive loop in the notebook (it blocks on `input()`), but
