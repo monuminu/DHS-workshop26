@@ -57,9 +57,10 @@ Then open `docs/modules/01-first-agent.ipynb` and select the **DHS Workshop**
 kernel. Full instructions: **[docs/setup.md](docs/setup.md)**.
 
 > **Why pinned packages?** The labs use `create_harness_agent`, which ships in
-> Agent Framework **core 1.8.0**. We pin specific 1.8.0 subpackages rather than the
-> `agent-framework` meta-package (which pulls pre-release-only deps and can fail to
-> resolve). See [`pyproject.toml`](pyproject.toml).
+> Agent Framework **core 1.13.0**. We pin each subpackage to its own latest stable
+> — they version independently, so foundry and openai trail core rather than
+> sharing its number — instead of the `agent-framework` meta-package (which pulls
+> pre-release-only deps and can fail to resolve). See [`pyproject.toml`](pyproject.toml).
 
 ---
 
