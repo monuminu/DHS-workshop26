@@ -44,11 +44,12 @@ loop, history persistence, compaction, planning, memory, observability. The
     md(
         """\
 !!! warning "Version & experimental features"
-    The harness ships in Agent Framework **core 1.8.0** (pinned by this
-    workshop's `pyproject.toml`). Several pieces (`MemoryStore`, skills) are marked
+    The harness ships in Agent Framework **core 1.13.0** (pinned by this
+    workshop's `pyproject.toml`). `create_harness_agent` itself is now a **stable**
+    API, but several pieces it builds on (`MemoryStore`, skills) are still marked
     *experimental* and emit warnings — fine for learning, pin versions in
     production. If `create_harness_agent` is missing, your install is older than
-    1.8.0; re-run [Setup](../setup.md)."""
+    core 1.12.0; re-run [Setup](../setup.md)."""
     ),
     md("## 1. Setup"),
     code(PREAMBLE),
