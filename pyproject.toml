@@ -29,6 +29,10 @@ dependencies = [
     #   openai / azure-openai / gemini providers were exposed.
     "agent-framework-orchestrations==1.0.2",  # M5: SequentialBuilder / HandoffBuilder
     # ^ versioned independently of core — 1.0.2 is its latest stable.
+    "mcp>=1.24,<2",  # M2: MCPStdioTool / MCPStreamableHTTPTool / MCPWebsocketTool
+    # ^ core declares `mcp>=1.24.0,<2` under its [all] extra, which we don't install.
+    #   The <2 bound is load-bearing: mcp 2.0 renamed handshake fields and core
+    #   1.13.0 fails to initialize any MCP server against it.
     "azure-identity>=1.19",
     "python-dotenv>=1.0",
 ]

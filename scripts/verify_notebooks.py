@@ -40,6 +40,12 @@ MODULES_DIR = REPO_ROOT / "docs" / "modules"
 # Keep these tied to the *lesson*, not to incidental wording — a model rewording
 # its prose should not fail the run, but the demo losing its point should.
 EXPECTATIONS: dict[str, list[tuple[str, str]]] = {
+    "02-tools": [
+        # The MCP section is only teaching anything if the server actually
+        # answered the discovery handshake with its tools.
+        ("MCP server discovery returns tools", r"\[mcp\] [1-9]\d* tools discovered"),
+        ("Microsoft Learn docs search is among them", r"microsoft_docs_search"),
+    ],
     "05-orchestration": [
         ("low-level graph reverses text", r"DLROW OLLEH"),
         ("handoff reaches a specialist", r"\[(billing|technical)\]"),
