@@ -59,6 +59,10 @@ EXPECTATIONS: dict[str, list[tuple[str, str]]] = {
     "07-operationalize": [
         ("middleware reports token usage", r"\[usage\].*total_token_count"),
         ("guard middleware blocks the request", r"\[guard\] blocked"),
+        # setup_tracing() must actually wire an exporter — whichever TRACE_BACKEND
+        # is set. Without this the tracing section can run green while exporting
+        # nowhere, which is exactly the failure a participant can't see.
+        ("tracing backend is configured", r"Tracing (→|->) \w+"),
     ],
 }
 

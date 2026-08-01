@@ -93,6 +93,27 @@ az login
 
 ---
 
+## 4b. (Optional) Pick a tracing backend
+
+Module 7 traces what your agent does. One variable, `TRACE_BACKEND`, decides
+where the traces go — the notebook code is the same either way. You can leave
+this alone and decide during the lab.
+
+| `TRACE_BACKEND` | What it is | What you need |
+|:--|:--|:--|
+| `console` *(default)* | Spans print inline in the notebook | nothing |
+| `phoenix` | [Arize Phoenix](https://github.com/Arize-ai/phoenix) — open source, runs locally | `uvx phoenix serve` |
+| `langfuse` | [Langfuse](https://langfuse.com) Cloud or self-hosted | free account + API keys |
+| `otlp` | Any other OTLP/HTTP collector (Jaeger, Aspire, Tempo…) | your own endpoint |
+
+!!! tip "Run Phoenix out-of-process"
+    Start it with `uvx phoenix serve` (or Docker) rather than installing
+    `arize-phoenix` into the workshop virtualenv — Phoenix pins its own
+    OpenTelemetry versions and will fight this repo's pins. The UI is at
+    <http://localhost:6006> and nothing leaves your machine.
+
+---
+
 ## 5. Smoke test
 
 Run this from the repo root (with your `.venv` active). It builds an agent using
