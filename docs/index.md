@@ -25,7 +25,7 @@ environment variable**, not your code.
 | **[M3 · Context Engineering](modules/03-context-engineering.ipynb)** | Manage what goes into the context window: sessions, memory, skills, compaction. |
 | **[M4 · The Agent Harness](modules/04-agent-harness.ipynb)** ★ | Assemble the full harness with `create_harness_agent`: todos, plan/execute modes, skills, durable memory. |
 | **[M5 · Multi-Agent Orchestration](modules/05-orchestration.ipynb)** | Coordinate many agents: sequential, concurrent, handoff, group chat, workflows. |
-| **[M6 · Evaluating & Optimizing](modules/06-evaluation.ipynb)** | Measure agent quality and close the optimization loop. |
+| **[M6 · Evaluating & Optimizing](modules/06-evaluation.ipynb)** | Measure agent quality against a golden dataset and close the optimization loop. |
 | **[M7 · Operationalizing](modules/07-operationalize.ipynb)** | Trace, log, and guard agents with OpenTelemetry and middleware. |
 | **[M8 · Capstone & Hosting](modules/08-capstone.ipynb)** | Combine everything into one app; explore A2A and hosting paths. |
 

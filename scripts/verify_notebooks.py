@@ -61,9 +61,25 @@ EXPECTATIONS: dict[str, list[tuple[str, str]]] = {
         ("handoff parks for the next turn", r"IDLE_WITH_PENDING_REQUESTS"),
     ],
     "06-evaluation": [
+        # The module is data-driven: if the golden set didn't load, nothing below means anything.
+        ("golden dataset loads", r"\[fixtures\] 8 orders, 6 golden cases, policy CONTOSO-RET-30"),
+        # A support bot must refuse an order that doesn't exist rather than invent an ETA.
+        ("unknown order is refused, not invented", r"REFUSAL CASE \(CR-9999\): pass"),
+        ("refusal invents nothing", r"no_hallucination=PASS"),
         # The whole point of M6: the vague agent must lose, the improved one win.
-        ("vague agent fails its checks", r"BEFORE \(vague\):\s+0/2 passed"),
-        ("improved agent passes", r"AFTER \(improved\):\s+2/2 passed"),
+        # 2 queries x num_repetitions=2 = 4 items per side, so one lucky answer can't carry it.
+        ("vague agent fails its checks", r"BEFORE \(vague\):\s+0/4 passed"),
+        ("improved agent passes", r"AFTER \(improved\):\s+4/4 passed"),
+        # Deliberately NOT pinned:
+        #   - "GOLDEN SET: n/6": observed 6/6 in 5 of 6 runs and 5/6 once, so pinning it
+        #     would go red on phrasing drift rather than on a real regression. The
+        #     refusal case above is pinned instead — it's the single case that matters
+        #     most and the one that actually caught a bug (curly-apostrophe phrasing);
+        #   - the LLM judge's verdict: a model grading a model is exactly the kind of
+        #     looks-meaningful-but-is-luck check this file exists to prevent (bug_report.md #3);
+        #   - naive_overlap counts: its whole point is that it's noisy (seen at 2/6 and 4/6);
+        #   - any fractional score: LocalEvaluator flattens every score to 1.0/0.0, so
+        #     graded fractions survive only in score.sample["reason"], not in stable output.
     ],
     "07-operationalize": [
         ("middleware reports token usage", r"\[usage\].*total_token_count"),
