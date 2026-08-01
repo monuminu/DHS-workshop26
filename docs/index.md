@@ -21,7 +21,7 @@ environment variable**, not your code.
 | Module | You'll learn to… |
 |:--|:--|
 | **[M1 · Your First Agent](modules/01-first-agent.ipynb)** | Create and run an agent; understand the agent loop and streaming. |
-| **[M2 · Tools & Function Calling](modules/02-tools.ipynb)** | Give the agent "hands" with function tools, approvals, and schemas. |
+| **[M2 · Tools & Function Calling](modules/02-tools.ipynb)** | Give the agent "hands" with function tools, MCP servers, and approvals. |
 | **[M3 · Context Engineering](modules/03-context-engineering.ipynb)** | Manage what goes into the context window: sessions, memory, compaction. |
 | **[M4 · The Agent Harness](modules/04-agent-harness.ipynb)** ★ | Assemble the full harness with `create_harness_agent`: todos, plan/execute modes, skills, durable memory. |
 | **[M5 · Multi-Agent Orchestration](modules/05-orchestration.ipynb)** | Coordinate many agents: sequential, concurrent, handoff, group chat, workflows. |
