@@ -73,12 +73,30 @@ kernel. Full instructions: **[docs/setup.md](docs/setup.md)**.
 │   ├── assets/                 # generated architecture diagrams
 │   └── modules/                # the 8 lab notebooks
 ├── workshop_utils/clients.py   # get_chat_client() — the provider switcher
-├── scripts/                    # notebook generators (gen_mN.py) + nbformat helper
+├── scripts/                    # notebook generators (gen_mN.py) + verify_notebooks.py
 ├── mkdocs.yml                  # site config (Material + mkdocs-jupyter)
 ├── pyproject.toml              # pinned deps + provider extras
 ├── .env.example                # all provider environment variables
 └── .github/workflows/deploy-docs.yml   # build + deploy to GitHub Pages
 ```
+
+---
+
+## Verify the labs still run
+
+Before a workshop — and after any dependency bump — execute all eight notebooks
+against a live model:
+
+```bash
+python scripts/verify_notebooks.py --model gpt-4o   # all 8
+python scripts/verify_notebooks.py --only 05 06     # just these
+```
+
+It executes each notebook **in memory**, so the committed `.ipynb` files stay
+output-free, and it checks that each lab still *makes its point* — not merely
+that no cell raised. M6's "vague vs improved agent" demo, for instance, once ran
+green while both agents scored identically, teaching nothing. Exits non-zero on
+any failure, so it works as a pre-flight gate.
 
 ---
 
