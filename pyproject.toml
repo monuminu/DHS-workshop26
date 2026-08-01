@@ -61,7 +61,15 @@ docs = [
     # so `configure_otel_providers(...)` works after the documented install.
     "opentelemetry-sdk>=1.39,<2",
     "opentelemetry-exporter-otlp-proto-grpc>=1.39,<2",
+    # HTTP exporter is what `setup_tracing()` uses for the Phoenix / Langfuse
+    # backends. Langfuse accepts OTLP over HTTP only — it does not speak gRPC.
+    "opentelemetry-exporter-otlp-proto-http>=1.39,<2",
 ]
+
+# NOTE: Phoenix is deliberately NOT an extra here. `arize-phoenix` pins its own
+# OpenTelemetry versions and would fight the pins above. Run it out-of-process
+# instead — `uvx phoenix serve`, or the Docker image — and point
+# TRACE_BACKEND=phoenix at it. See docs/modules/07-operationalize.ipynb.
 
 [tool.uv]
 # Prefer stable releases for the agent-framework providers. `if-necessary-or-explicit`
