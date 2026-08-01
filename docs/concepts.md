@@ -116,7 +116,8 @@ A demo that works once isn't a product. The last two modules close the loop:
 
 - **[M6 · Evaluation](modules/06-evaluation.ipynb)** — measure agent quality
   (correctness, groundedness, task success) so you can *improve it on purpose*
-  instead of by vibes.
+  instead of by vibes. The lab evaluates a Contoso Retail support bot against a
+  **golden dataset** — known-correct answers and the tool calls each one requires.
 
   ![Evaluation loop](assets/evaluation-loop.png)
 

@@ -25,7 +25,7 @@ tools, memory, planning, multi-agent orchestration, evaluation, and observabilit
 | **M3 · Context Engineering** | sessions, memory, compaction |
 | **M4 · The Agent Harness** ★ | `create_harness_agent` — batteries included |
 | **M5 · Multi-Agent Orchestration** | agents-as-nodes workflows, executors + edges |
-| **M6 · Evaluating & Optimizing** | `evaluate_agent`, custom checks, CI gates |
+| **M6 · Evaluating & Optimizing** | golden datasets, ground truth, custom checks, CI gates |
 | **M7 · Operationalizing** | middleware, OpenTelemetry tracing |
 | **M8 · Capstone & Hosting** | combine everything; A2A, Functions, containers |
 
