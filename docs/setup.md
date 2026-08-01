@@ -39,14 +39,15 @@ We recommend [`uv`](https://docs.astral.sh/uv/) (fast), but plain `pip` works to
 
 !!! warning "Use the pinned subpackages — don't install the `agent-framework` meta-package"
     This workshop pins each Agent Framework subpackage to an exact version. They
-    version **independently**: core is on **1.13.0**, while `foundry` (1.10.4) and
-    `openai` (1.10.0) sit lower — there is no 1.13.0 of either. `openai` is held
-    one minor behind its latest on purpose: from 1.11.0 that client always asks the
-    Responses API for encrypted reasoning content, which non-reasoning models like
-    **gpt-4o** reject outright. The labs depend on `create_harness_agent`, which
-    needs core **1.12.0 or newer**. The umbrella `agent-framework` package pulls in
-    `core[all]` (pre-release-only deps) and can fail to resolve — so we install just
-    the providers the labs use. The `pyproject.toml` already does this for you.
+    version **independently**: core is on **1.13.0**, `foundry` on 1.10.4,
+    `openai` on 1.10.0, and `orchestrations` on 1.0.2 — there is no 1.13.0 of the
+    others. `openai` is held one minor behind its latest on purpose: from 1.11.0
+    that client always asks the Responses API for encrypted reasoning content,
+    which non-reasoning models like **gpt-4o** reject outright. The labs depend on
+    `create_harness_agent`, which needs core **1.12.0 or newer**. The umbrella
+    `agent-framework` package pulls in `core[all]` (pre-release-only deps) and can
+    fail to resolve — so we install just the providers the labs use. The
+    `pyproject.toml` already does this for you.
 
 ## 3. Register the Jupyter kernel
 
