@@ -1,4 +1,4 @@
-"""Generate Module 5 — Multi-Agent Orchestration (stable core WorkflowBuilder)."""
+"""Generate Module 5 — Multi-Agent Orchestration (core WorkflowBuilder + orchestrations builders)."""
 
 from _nbbuild import code, md, write_notebook
 
@@ -18,7 +18,8 @@ cells = [
 > one big agent.
 >
 > **You'll use:** the core `WorkflowBuilder` with **agents as nodes** (sequential
-> and fan-out), plus low-level **executors + edges**.
+> and fan-out), low-level **executors + edges**, and two ready-made builders —
+> `SequentialBuilder` and `HandoffBuilder`.
 
 ---
 
@@ -38,9 +39,8 @@ more reliable.
 
 In Agent Framework, **an agent is itself an executor** — so you compose agents
 into a **typed workflow graph** with the same `WorkflowBuilder` you'd use for
-plain functions. (Higher-level helpers like `SequentialBuilder` exist in the
-separate `agent-framework-orchestrations` package; this workshop stays on the
-**stable core** so everything installs cleanly.)"""
+plain functions. Sections 2–4 build the shapes by hand so you can see the
+mechanics; section 5 shows the packaged builders that do it for you."""
     ),
     md("## 1. Setup"),
     code(PREAMBLE),
@@ -174,19 +174,104 @@ print("state: ", events.get_final_state())'''
     ),
     md(
         """\
-## 5. Choosing a pattern
+## 5. Ready-made builders: `SequentialBuilder` and `HandoffBuilder`
+
+Sections 2–4 wired every edge by hand. The `agent-framework-orchestrations`
+package ships **builders** for the common shapes, so you describe *who
+participates* instead of *how they connect*.
+
+### 5a. `SequentialBuilder` — the pipeline, without the edges
+
+This is section 2's writer → reviewer chain again. Same result, no `add_edge`:
+hand it an ordered list and it wires the chain for you."""
+    ),
+    code(
+        '''\
+from agent_framework.orchestrations import SequentialBuilder
+
+# Same two agents from section 2 — only the wiring changes.
+pipeline = SequentialBuilder(participants=[writer, reviewer], output_from="all").build()
+
+events = await pipeline.run("Write a tagline for a budget-friendly eBike.")
+for output in cast(list[AgentResponse], events.get_outputs()):
+    print(f"{'-'*60}\\n[{output.messages[0].author_name}]\\n{output.text}")
+print("\\nFinal state:", events.get_final_state())'''
+    ),
+    md(
+        """\
+### 5b. `HandoffBuilder` — route to the right specialist
+
+A **handoff** is different from a pipeline: control doesn't march through a fixed
+order, it *transfers*. A triage agent inspects the request and hands it to whoever
+should own it. The specialists can hand back.
+
+Two requirements the builder enforces:
+
+- every participant must set **`require_per_service_call_history_persistence=True`**
+  (the handoff needs the full conversation to travel with the control transfer) —
+  `.build()` raises `ValueError` otherwise;
+- you must name a start agent with **`.with_start_agent(...)`**."""
+    ),
+    code(
+        '''\
+from agent_framework.orchestrations import HandoffBuilder
+
+def specialist(name: str, instructions: str) -> Agent:
+    return Agent(
+        client=client,
+        name=name,
+        instructions=instructions,
+        require_per_service_call_history_persistence=True,   # required by HandoffBuilder
+    )
+
+triage = specialist("triage", "You route support tickets to the right specialist. Do not answer the question yourself.")
+billing = specialist("billing", "You handle billing questions. Answer in two sentences.")
+technical = specialist("technical", "You handle technical faults. Answer in two sentences.")
+
+support = (
+    HandoffBuilder(participants=[triage, billing, technical], output_from="all")
+    .add_handoff(triage, [billing, technical])   # triage routes outward...
+    .add_handoff(billing, [triage])              # ...and specialists can hand back
+    .add_handoff(technical, [triage])
+    .with_start_agent(triage)
+    .build()
+)
+
+events = await support.run("My payment failed twice and I was charged anyway.")
+for output in cast(list[AgentResponse], events.get_outputs()):
+    if output.text.strip():                      # triage's turn is a routing call, not text
+        print(f"[{output.messages[0].author_name}] {output.text}")
+print("\\nFinal state:", events.get_final_state())'''
+    ),
+    md(
+        """\
+!!! note "Why the run ends `IDLE_WITH_PENDING_REQUESTS`"
+    A handoff workflow is a **conversation**, not a one-shot pipeline. It answers
+    the turn, then parks — waiting for the user's next message. That pending state
+    is the workflow saying *"your move"*, not an error. It's also the hook that
+    makes handoff a natural fit for human-in-the-loop support flows."""
+    ),
+    md(
+        """\
+## 6. Choosing a pattern
 
 ```
-Fixed pipeline?                          → chain agents with add_edge (sequential)
+Fixed pipeline?                          → SequentialBuilder (or add_edge by hand)
 Independent sub-tasks to merge?          → fan-out edges + an aggregator node
-Route to the right specialist?           → Handoff (agent-framework-orchestrations)
-Need agents to debate/collaborate?       → Group chat / Magentic (orchestrations)
+Route to the right specialist?           → HandoffBuilder
+Need agents to debate/collaborate?       → GroupChatBuilder / MagenticBuilder
 Need explicit, recoverable control flow? → custom executors + edges
 ```
 
-Start with the simplest shape that fits. The high-level `SequentialBuilder`,
-`HandoffBuilder`, `GroupChatBuilder`, and `MagenticBuilder` (in
-`agent-framework-orchestrations`) are worth exploring once you're comfortable."""
+Start with the simplest shape that fits — reach for a builder once the hand-wired
+version stops being the clearest way to say what you mean.
+
+**Group chat and Magentic** round out the set: `GroupChatBuilder` runs a managed
+conversation between agents, and `MagenticBuilder` lets a manager plan and delegate
+dynamically for open-ended tasks. Both ship in the same
+`agent-framework-orchestrations` package you just used, so they're an import away.
+Working examples live in the official samples —
+[`03-workflows/orchestrations/`](https://github.com/microsoft/agent-framework/tree/main/python/samples/03-workflows/orchestrations)."""
     ),
     md(
         """\
@@ -198,6 +283,8 @@ Start with the simplest shape that fits. The high-level `SequentialBuilder`,
    loop) and see the second draft.
 3. Extend the low-level graph with a middle node that appends `"!!!"` between
    upper and reverse (see upstream `step1_executors_and_edges.py`).
+4. Add a third specialist (e.g. `refunds`) to the handoff workflow and give
+   `triage` a ticket that should reach it.
 
 ---
 

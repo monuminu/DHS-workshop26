@@ -27,6 +27,8 @@ dependencies = [
     #   workshop's documented default, gpt-4o. 1.10.0 is the last version without it.
     #   The foundry client is unaffected (it strips the flag itself), so only the
     #   openai / azure-openai / gemini providers were exposed.
+    "agent-framework-orchestrations==1.0.2",  # M5: SequentialBuilder / HandoffBuilder
+    # ^ versioned independently of core — 1.0.2 is its latest stable.
     "azure-identity>=1.19",
     "python-dotenv>=1.0",
 ]
