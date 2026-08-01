@@ -37,7 +37,7 @@ loop, history persistence, compaction, planning, memory, observability. The
 | **TodoProvider** | the agent plans & tracks its own work items | *new* |
 | **AgentModeProvider** | plan vs. execute mode tracking | *new* |
 | **MemoryStore** | file-based durable memory across sessions | M3 (concept) |
-| **SkillsProvider** | progressive discovery/loading of skills | *new* |
+| **SkillsProvider** | progressive discovery/loading of skills | M3 |
 | **OpenTelemetry** | built-in tracing | M7 |
 | **Web search** | real-time web search tool | *new* |"""
     ),
