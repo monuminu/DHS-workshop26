@@ -56,10 +56,18 @@ The levers you'll pull in **[M3](modules/03-context-engineering.ipynb)**:
 | **Sessions** | Keep conversation history across turns | `agent.create_session()` |
 | **Context providers** | Inject dynamic facts/instructions before each run | `ContextProvider` |
 | **Memory** | Persist what matters about the user/task | `ContextProvider` + state, `MemoryStore` |
+| **Skills** | Keep expertise on disk and load it only when relevant | `SkillsProvider`, `FileSkillsSource`, `InlineSkill` |
 | **Compaction** | Summarize/trim history so you never overflow the window | `CompactionProvider` |
 
 > **Garbage in, garbage out** applies twice over for agents. The model is only as
 > good as the context you engineer for it.
+
+**Skills** deserve a note, because they invert the usual instinct. Everything the
+agent knows how to do *could* go in the system prompt — but that costs tokens on
+every turn and buries the part that matters. A skill keeps its instructions,
+reference documents, and scripts in a folder; the agent sees only a one-line
+description up front and loads the rest **on demand**. Fifty skills cost fifty
+short lines per turn, not fifty pages.
 
 ---
 

@@ -46,6 +46,15 @@ EXPECTATIONS: dict[str, list[tuple[str, str]]] = {
         ("MCP server discovery returns tools", r"\[mcp\] [1-9]\d* tools discovered"),
         ("Microsoft Learn docs search is among them", r"microsoft_docs_search"),
     ],
+    "03-context-engineering": [
+        # Skills are only teaching progressive disclosure if both sources —
+        # disk and code — actually show up in the one merged catalog.
+        ("file skill is discovered from disk", r"\[skill\] unit-converter"),
+        ("code-defined skill is in the same catalog", r"\[skill\] volume-converter"),
+        # And if the agent then *used* them: 26.2 x 1.60934 and 5 x 3.78541.
+        ("file skill's subprocess script ran", r"42\.16"),
+        ("in-process script ran", r"18\.9"),
+    ],
     "05-orchestration": [
         ("low-level graph reverses text", r"DLROW OLLEH"),
         ("handoff reaches a specialist", r"\[(billing|technical)\]"),
