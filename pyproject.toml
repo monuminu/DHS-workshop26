@@ -64,6 +64,10 @@ docs = [
     # HTTP exporter is what `setup_tracing()` uses for the Phoenix / Langfuse
     # backends. Langfuse accepts OTLP over HTTP only — it does not speak gRPC.
     "opentelemetry-exporter-otlp-proto-http>=1.39,<2",
+    # Reshapes Agent Framework's raw `gen_ai.*` spans into the `llm.*`/`tool.*`
+    # OpenInference shape that Phoenix's UI renders. Small pure-Python package —
+    # unlike `arize-phoenix` itself, it does not pin its own OpenTelemetry stack.
+    "openinference-instrumentation-agent-framework>=0.1.6,<0.2",
 ]
 
 # NOTE: Phoenix is deliberately NOT an extra here. `arize-phoenix` pins its own

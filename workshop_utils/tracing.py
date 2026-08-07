@@ -11,6 +11,12 @@ backend can read them. The workshop ships three ready-made choices:
 ``console``      Spans print to stdout. No install, no server. (default)
 ``phoenix``      `Arize Phoenix <https://github.com/Arize-ai/phoenix>`_ —
                  open source, runs locally, nothing leaves your machine.
+                 Raw Agent Framework spans are reshaped into
+                 `OpenInference <https://github.com/Arize-ai/openinference>`_
+                 format first (via
+                 ``openinference-instrumentation-agent-framework``), which is
+                 what Phoenix's UI is built to render — proper input/output
+                 panes, nested tool calls, token counts.
 ``langfuse``     `Langfuse <https://langfuse.com>`_ Cloud (or self-hosted) —
                  hosted UI, needs a public/secret key pair.
 ``otlp``         Any other OTLP/HTTP collector (Jaeger, Aspire, App Insights
@@ -104,17 +110,56 @@ def setup_tracing(backend: str | None = None, *, enable_sensitive_data: bool = T
 
     # --- Phoenix: open source, runs locally -----------------------------------
     # `uvx phoenix serve` → UI on :6006, OTLP/HTTP on :6006/v1/traces.
+    #
+    # Agent Framework emits raw OTel GenAI spans (``gen_ai.*``), but Phoenix's UI
+    # renders OpenInference ones (``llm.*`` / ``tool.*``), so each span has to be
+    # reshaped before it is exported. `configure_otel_providers()` can't do that —
+    # it only accepts *exporters*, wrapping each directly in a `BatchSpanProcessor`,
+    # with no way to insert a reshaping processor ahead of the exporter. So the
+    # `TracerProvider` is built by hand instead: the OpenInference processor
+    # goes first (reshapes each span), then a `BatchSpanProcessor` (exports it).
     if backend == "phoenix":
+        from opentelemetry import trace as otel_trace
+        from opentelemetry.sdk.resources import Resource
+        from opentelemetry.sdk.trace import TracerProvider
+        from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+        try:
+            from openinference.instrumentation.agent_framework import (
+                AgentFrameworkToOpenInferenceProcessor,
+            )
+            from openinference.semconv.resource import ResourceAttributes
+        except ModuleNotFoundError as exc:  # pragma: no cover - install hint
+            raise ModuleNotFoundError(
+                "Phoenix tracing needs OpenInference. Install with: "
+                "uv pip install openinference-instrumentation-agent-framework"
+            ) from exc
+
         base = os.getenv("PHOENIX_COLLECTOR_ENDPOINT", PHOENIX_DEFAULT_ENDPOINT).rstrip("/")
         headers = {}
         # Phoenix Cloud (and auth-enabled self-hosted) needs an API key.
         if api_key := os.getenv("PHOENIX_API_KEY"):
             headers["Authorization"] = f"Bearer {api_key}"
-        configure_otel_providers(
-            exporters=[_otlp_http_exporter(f"{base}/v1/traces", headers)],
-            enable_sensitive_data=enable_sensitive_data,
+        project = os.getenv("PHOENIX_PROJECT_NAME", "dhs-workshop26")
+
+        tracer_provider = TracerProvider(
+            resource=Resource.create({ResourceAttributes.PROJECT_NAME: project})
         )
-        print(f"Tracing → Phoenix at {base}. Open {base} to watch traces arrive.")
+        tracer_provider.add_span_processor(AgentFrameworkToOpenInferenceProcessor())
+        tracer_provider.add_span_processor(
+            BatchSpanProcessor(_otlp_http_exporter(f"{base}/v1/traces", headers))
+        )
+        # set_tracer_provider() must run before enable_instrumentation(), so
+        # Agent Framework's spans are recorded by *this* provider from the start.
+        otel_trace.set_tracer_provider(tracer_provider)
+        from agent_framework.observability import enable_instrumentation
+
+        enable_instrumentation(enable_sensitive_data=enable_sensitive_data)
+
+        print(
+            f"Tracing → Phoenix at {base} (project '{project}'), OpenInference-shaped. "
+            f"Open {base} to watch traces arrive."
+        )
         return backend
 
     # --- Langfuse: hosted (cloud) or self-hosted -------------------------------
