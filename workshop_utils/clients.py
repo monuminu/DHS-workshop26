@@ -27,6 +27,9 @@ Pick your backend by setting ``MODEL_PROVIDER`` in your ``.env`` (see ``.env.exa
     MODEL_PROVIDER=ollama       # pip install -e ".[ollama]" — local, no key
     MODEL_PROVIDER=bedrock      # pip install -e ".[bedrock]"
     MODEL_PROVIDER=gemini       # Gemini via its OpenAI-compatible endpoint
+
+Behind a TLS-inspecting corporate proxy, set ``SSL_VERIFY=false`` to stop
+certificate verification from rejecting the proxy's re-signed certificates.
 """
 
 from __future__ import annotations
@@ -40,6 +43,45 @@ from dotenv import load_dotenv
 load_dotenv()
 
 __all__ = ["get_chat_client", "current_provider", "SUPPORTED_PROVIDERS"]
+
+
+def _ssl_verification_disabled() -> bool:
+    return os.getenv("SSL_VERIFY", "true").strip().lower() in {"false", "0", "no", "off"}
+
+
+def _disable_ssl_verification() -> None:
+    """Make Python's default TLS contexts accept any certificate.
+
+    Corporate proxies that inspect TLS re-sign every response with their own root
+    CA, which Python does not trust, so requests fail with SSLCertVerificationError.
+    httpx (and therefore the OpenAI, Anthropic and Ollama clients) builds its
+    default context through ``ssl.create_default_context``, so overriding that one
+    factory covers every outbound call. This removes certificate authentication
+    entirely — only opt in via SSL_VERIFY=false on a network you trust.
+    """
+    import ssl
+
+    original = ssl.create_default_context
+
+    def unverified(*args: Any, **kwargs: Any) -> ssl.SSLContext:
+        context = original(*args, **kwargs)
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        return context
+
+    ssl.create_default_context = unverified  # type: ignore[assignment]
+    ssl._create_default_https_context = unverified  # type: ignore[attr-defined]
+
+    try:
+        import urllib3
+
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    except ModuleNotFoundError:
+        pass
+
+
+if _ssl_verification_disabled():
+    _disable_ssl_verification()
 
 SUPPORTED_PROVIDERS = (
     "foundry",
@@ -88,6 +130,10 @@ def get_chat_client(**overrides: Any):
                 "Foundry provider needs 'agent-framework-foundry' and 'azure-identity'. "
                 "Install with: uv pip install -e '.'"
             ) from exc
+        # azure-core transports use requests, which passes its own cert settings
+        # to urllib3 and so ignores the ssl module override above.
+        if _ssl_verification_disabled():
+            overrides.setdefault("connection_verify", False)
         return FoundryChatClient(credential=AzureCliCredential(), **overrides)
 
     # --- OpenAI ---------------------------------------------------------------
